@@ -1,42 +1,44 @@
 package io.github.shigure19.ecustbath;
 
-import java.util.ArrayList;
-import io.github.shigure19.ecustbath.bathroom;
-import  io.github.shigure19.ecustbath.statusResolver;
-public class getData{
-    public static ArrayList<bathroom> getAllBathroom() {
-        ArrayList<bathroom> a = new ArrayList<bathroom>();
-        try{
-            /* 真正使用的时候这里编写业务代码 */
-            for(int i=0;i<5;i++){
-                a.add(new bathroom());
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return a;
-    }
+import java.util.List;
 
-    public static bathroom getBathroomById(int bathroomId) {
-        bathroom a = new bathroom();
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import io.github.shigure19.ecustbath.entity.Room;
+import io.github.shigure19.ecustbath.entity.RoomMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+
+public class getData{
+    @Autowired
+    private static RoomMapper roomMapper;
+    public static List<Room> getAllRoom() {
+        List<Room> b = null;
         try{
             /* 真正使用的时候这里编写业务代码 */
+            b =roomMapper.selectList(null);
         }catch (Exception e){
             e.printStackTrace();
         }
-        return a;
+        return b;
     }
-}
-class hardwareData{
-    public static bathroom getBathroomById(int bathroomId){
-        try {
-            int status = 0, max = 0;
-            /*sql*/
-            statusResolver sr = new statusResolver(status, max);
-            return new bathroom(max, sr.getBathroomDetail());
+    public static List<Room> getOneRoom(int bathroomId) {
+        List<Room> r = null;
+        try{
+            QueryWrapper q = new QueryWrapper();
+            q.eq("bathroomId",bathroomId);
+            r=roomMapper.selectList(q);
         }catch (Exception e){
             e.printStackTrace();
-            return new bathroom();
+        }
+        return r;
+    }
+    public static void setOneRoom(int roomId){
+        try{
+            QueryWrapper q = new QueryWrapper();
+            q.eq("roomId",roomId);
+            Room r=roomMapper.selectOne(q);
+            roomMapper.update(r,q);
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 }
